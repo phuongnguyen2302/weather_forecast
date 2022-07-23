@@ -12,5 +12,5 @@ interface WeatherForecastAPI {
         @Query(value = "cnt") numberOfDays: Int = 7,
         @Query(value = "units") units: String = "metric",
         @Query(value = "appid") appid: String = BuildConfig.WEATHER_FORECASE_API_KEY,
-    ): Single<DailyForecastResponse>
+    ): Single<DailyForecastListDto>
 }

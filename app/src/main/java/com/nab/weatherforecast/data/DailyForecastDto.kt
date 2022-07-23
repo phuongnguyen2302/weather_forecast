@@ -24,7 +24,7 @@ data class DailyForecastDto(
 @JsonClass(generateAdapter = true)
 data class DailyForecastTemperatureDto(
     @field:Json(name = "day")
-    val averageTemperature: Int,
+    val averageTemperature: Double,
 )
 
 @JsonClass(generateAdapter = true)

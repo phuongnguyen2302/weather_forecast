@@ -69,6 +69,15 @@ dependencies {
     implementation "com.squareup.moshi:moshi-adapters:$moshiVersion"
     implementation("com.squareup.moshi:moshi-kotlin:$moshiVersion")
 
+    // MockK
+    def mockkVersion = '1.12.4'
+    testImplementation "io.mockk:mockk:$mockkVersion"
+    androidTestImplementation "io.mockk:mockk-android:$mockkVersion"
+
+    def assertJVersion = '3.12.2'
+    testImplementation "org.assertj:assertj-core:$assertJVersion"
+    androidTestImplementation "org.assertj:assertj-core:$assertJVersion"
+
     // Test
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
