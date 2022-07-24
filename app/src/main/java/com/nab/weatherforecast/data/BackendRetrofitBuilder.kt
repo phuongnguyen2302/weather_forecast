@@ -31,4 +31,6 @@ object BackendRetrofitBuilder {
             .baseUrl(BuildConfig.WEATHER_FORECAST_BASE_URL)
             .build()
     }
+
+    fun weatherApi(): WeatherForecastAPI = retrofit.create(WeatherForecastAPI::class.java)
 }

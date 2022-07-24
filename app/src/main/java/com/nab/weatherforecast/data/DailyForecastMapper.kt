@@ -4,7 +4,7 @@ import com.nab.weatherforecast.domain.DailyForecast
 import java.text.SimpleDateFormat
 import java.util.*
 
-class DailyForecastMapper {
+object DailyForecastMapper {
     fun map(dailyForecastDto: DailyForecastDto): DailyForecast {
         val formatDate = SimpleDateFormat("EEE, dd MMM yyyy", Locale.ENGLISH)
         return DailyForecast(

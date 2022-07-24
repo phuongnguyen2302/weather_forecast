@@ -11,7 +11,7 @@ class DailyForecastMapperTest {
 
     @Before
     fun setUp() {
-        sut = DailyForecastMapper()
+        sut = DailyForecastMapper
     }
 
     @After
