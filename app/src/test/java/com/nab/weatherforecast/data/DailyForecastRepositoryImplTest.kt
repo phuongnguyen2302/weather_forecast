@@ -1,12 +1,17 @@
 package com.nab.weatherforecast.data
 
 import com.nab.weatherforecast.domain.DailyForecast
+import com.nab.weatherforecast.domain.DailyForecastResponse
+import com.nab.weatherforecast.util.TestRxScheduler
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import io.reactivex.Single
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import retrofit2.Response
 
 class DailyForecastRepositoryImplTest {
 
@@ -18,7 +23,7 @@ class DailyForecastRepositoryImplTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        sut = DailyForecastRepositoryImpl
+        sut = DailyForecastRepositoryImpl(TestRxScheduler())
 
         mockkObject(BackendRetrofitBuilder)
         mockkObject(DailyForecastMapper)
@@ -41,7 +46,34 @@ class DailyForecastRepositoryImplTest {
     }
 
     @Test
-    fun `getDailyForecast - when invokes then call returns expected value`() {
+    fun `getDailyForecast - when response is failed then returns error with exception`() {
+        // Given
+        val errorBody = "".toResponseBody("application/json".toMediaType())
+        val errorResponse: Response<DailyForecastListDto> = Response.error(400, errorBody)
+        every { api.getDailyForecast("location") } returns Single.just(errorResponse)
+
+        // When
+        val result = sut.getDailyForecast("location").test()
+
+        // Then
+        result.assertValue(DailyForecastResponse.Error(errorResponse.message()))
+    }
+
+    @Test
+    fun `getDailyForecast - when response body is null then returns error with exception`() {
+        // Given
+        val successResponse: Response<DailyForecastListDto> = Response.success(null)
+        every { api.getDailyForecast("location") } returns Single.just(successResponse)
+
+        // When
+        val result = sut.getDailyForecast("location").test()
+
+        // Then
+        result.assertValue(DailyForecastResponse.Empty(successResponse.message()))
+    }
+
+    @Test
+    fun `getDailyForecast - when response is succeed then returns expected list`() {
         // Given
         val firstItem = DailyForecastDto(
             date = 123,
@@ -72,19 +104,15 @@ class DailyForecastRepositoryImplTest {
             humidity = 19,
             weatherDescription = "sunny"
         )
-
-        every { api.getDailyForecast("location") } returns Single.just(
-            DailyForecastListDto(
-                dailyList = listOf(firstItem, secondItem)
-            )
-        )
         every { DailyForecastMapper.map(firstItem) } returns mappedFirstItem
         every { DailyForecastMapper.map(secondItem) } returns mappedSecondItem
-
+        every { api.getDailyForecast("location") } returns Single.just(
+            Response.success(DailyForecastListDto(listOf(firstItem, secondItem)))
+        )
         // When
         val result = sut.getDailyForecast("location").test()
 
         // Then
-        result.assertValue(listOf(mappedFirstItem, mappedSecondItem))
+        result.assertValue(DailyForecastResponse.Success(listOf(mappedFirstItem, mappedSecondItem)))
     }
 }

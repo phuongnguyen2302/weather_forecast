@@ -1,12 +1,12 @@
 package com.nab.weatherforecast.domain
 
 import com.nab.weatherforecast.data.DailyForecastRepositoryImpl
+import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import io.mockk.mockkObject
+import io.mockk.mockk
 import io.mockk.verify
 import io.reactivex.Single
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
@@ -14,19 +14,55 @@ class GetDailyForecastUseCaseTest {
 
     private lateinit var sut: GetDailyForecastUseCase
 
+    @MockK
+    private lateinit var dailyForecastRepositoryImpl: DailyForecastRepositoryImpl
+
     @Before
     fun setUp() {
-        mockkObject(DailyForecastRepositoryImpl)
-        sut = GetDailyForecastUseCase(DailyForecastRepositoryImpl)
+        MockKAnnotations.init(this)
+        sut = GetDailyForecastUseCase(dailyForecastRepositoryImpl)
     }
 
     @Test
     fun `execute - when calls execute then calls getDailyForecast via repository`() {
+        // Given
+        every { dailyForecastRepositoryImpl.getDailyForecast("location") } returns
+                Single.just(DailyForecastResponse.Success(mockk()))
+
         // When
         sut.execute("location")
 
         // Then
-        verify(exactly = 1) { DailyForecastRepositoryImpl.getDailyForecast("location") }
+        verify(exactly = 1) { dailyForecastRepositoryImpl.getDailyForecast("location") }
+    }
+
+    @Test
+    fun `execute - when returns error response then should throw exception`() {
+        // Given
+        val message = "exceptionMessage"
+        every { dailyForecastRepositoryImpl.getDailyForecast("location") } returns
+                Single.just(DailyForecastResponse.Error(message))
+
+        // When
+        val result = sut.execute("location").test()
+
+        // Then
+        result.assertErrorMessage(message)
+    }
+
+
+    @Test
+    fun `execute - when returns empty response then should throw exception`() {
+        // Given
+        val message = "exceptionMessage"
+        every { dailyForecastRepositoryImpl.getDailyForecast("location") } returns
+                Single.just(DailyForecastResponse.Error(message))
+
+        // When
+        val result = sut.execute("location").test()
+
+        // Then
+        result.assertErrorMessage(message)
     }
 
     @Test
@@ -48,9 +84,8 @@ class GetDailyForecastUseCaseTest {
                 weatherDescription = "sunny"
             )
         )
-        every { DailyForecastRepositoryImpl.getDailyForecast("location") } returns Single.just(
-            expectedList
-        )
+        every { dailyForecastRepositoryImpl.getDailyForecast("location") } returns
+                Single.just(DailyForecastResponse.Success(expectedList))
 
         // When
         val result = sut.execute("location").test()

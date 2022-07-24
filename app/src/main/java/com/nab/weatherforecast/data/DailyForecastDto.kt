@@ -1,5 +1,6 @@
 package com.nab.weatherforecast.data
 
+import com.nab.weatherforecast.domain.DailyForecast
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -19,7 +20,11 @@ data class DailyForecastDto(
 
     @field:Json(name = "weather")
     val weatherDescription: DailyForecastDescriptionDto,
-)
+) {
+    fun toDailyForecast(): DailyForecast {
+        return DailyForecastMapper.map(this)
+    }
+}
 
 @JsonClass(generateAdapter = true)
 data class DailyForecastTemperatureDto(
