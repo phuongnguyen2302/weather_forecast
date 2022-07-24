@@ -2,7 +2,7 @@ package com.nab.weatherforecast.data
 
 import com.nab.weatherforecast.domain.DailyForecast
 import com.nab.weatherforecast.domain.DailyForecastResponse
-import com.nab.weatherforecast.util.TestRxScheduler
+import com.nab.weatherforecast.util.TrampolineTestRxScheduler
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import io.reactivex.Single
@@ -23,7 +23,7 @@ class DailyForecastRepositoryImplTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        sut = DailyForecastRepositoryImpl(TestRxScheduler())
+        sut = DailyForecastRepositoryImpl(TrampolineTestRxScheduler())
 
         mockkObject(BackendRetrofitBuilder)
         mockkObject(DailyForecastMapper)
