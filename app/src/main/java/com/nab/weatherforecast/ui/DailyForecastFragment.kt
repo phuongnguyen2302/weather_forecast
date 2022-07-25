@@ -1,31 +1,39 @@
-package com.nab.weatherforecast
+package com.nab.weatherforecast.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.nab.weatherforecast.DailyForecastApplication
 import com.nab.weatherforecast.databinding.FragmentDailyForecastBinding
-import com.nab.weatherforecast.ui.DailyForecastViewModel
 
-/**
- * A simple [Fragment] subclass as the default destination in the navigation.
- */
 open class DailyForecastFragment : Fragment() {
 
     private var _binding: FragmentDailyForecastBinding? = null
     private val binding get() = _binding!!
     open lateinit var viewModel: DailyForecastViewModel
+    private lateinit var adapter: DailyForecastAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val application = (activity?.application as DailyForecastApplication)
-        viewModel = DailyForecastViewModel(application.dailyForecastUseCase, application.rxScheduler)
-
         _binding = FragmentDailyForecastBinding.inflate(inflater, container, false)
+
+        val application = (activity?.application as DailyForecastApplication)
+        viewModel =
+            DailyForecastViewModel(application.dailyForecastUseCase, application.rxScheduler)
+        binding.viewModel = viewModel
+        adapter = DailyForecastAdapter()
+
+        setupAdapter()
         return binding.root
+    }
+
+    private fun setupAdapter() {
+        binding.dailyForecastRecyclerView.adapter = adapter
+        viewModel.dailyForecastList.observe(viewLifecycleOwner, adapter::submitList)
     }
 
     override fun onDestroyView() {

@@ -1,6 +1,7 @@
 package com.nab.weatherforecast
 
 import com.kaspersky.kaspresso.screens.KScreen
+import com.nab.weatherforecast.ui.DailyForecastFragment
 import io.github.kakaocup.kakao.edit.KEditText
 import io.github.kakaocup.kakao.recycler.KRecyclerView
 import io.github.kakaocup.kakao.text.KButton

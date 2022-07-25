@@ -12,7 +12,7 @@ object DailyForecastMapper {
             temperature = dailyForecastDto.temperature.averageTemperature,
             pressure = dailyForecastDto.pressure,
             humidity = dailyForecastDto.humidity,
-            weatherDescription = dailyForecastDto.weatherDescription.description
+            weatherDescription = dailyForecastDto.weatherDescription[0].description
         )
     }
 }
