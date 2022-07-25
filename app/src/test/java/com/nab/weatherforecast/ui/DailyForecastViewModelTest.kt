@@ -26,7 +26,7 @@ class DailyForecastViewModelTest {
     private lateinit var getDailyForecastUseCase: GetDailyForecastUseCase
 
     @MockK(relaxUnitFun = true)
-    private lateinit var dailyForecastListObserver: Observer<List<DailyForecast>>
+    private lateinit var dailyForecastListObserver: Observer<List<DailyForecastItemViewModel>>
 
     private lateinit var sut: DailyForecastViewModel
 
@@ -76,6 +76,22 @@ class DailyForecastViewModelTest {
                 weatherDescription = "sunny"
             )
         )
+        val expectedItemViewModelList = listOf(
+            DailyForecastItemViewModel(
+                date = "Thu, 01 Jan 1970",
+                temperature = "10.0˚C",
+                pressure = "6",
+                humidity = "10%",
+                weatherDescription = "rainy"
+            ),
+            DailyForecastItemViewModel(
+                date = "Wed, 02 Jul 2020",
+                temperature = "15.0˚C",
+                pressure = "60",
+                humidity = "4%",
+                weatherDescription = "sunny"
+            )
+        )
         every { getDailyForecastUseCase.execute(any()) } returns Single.just(expectedList)
 
         // When
@@ -83,7 +99,7 @@ class DailyForecastViewModelTest {
         sut.onGetWeatherClick()
 
         // Then
-        verify(exactly = 1) {dailyForecastListObserver.onChanged(expectedList)}
+        verify(exactly = 1) {dailyForecastListObserver.onChanged(expectedItemViewModelList)}
     }
 
     @Test

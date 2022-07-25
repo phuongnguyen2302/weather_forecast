@@ -19,8 +19,8 @@ class DailyForecastViewModel(
     val inputText = MutableLiveData("")
     val errorText = MutableLiveData("")
 
-    private val _dailyForecastList = MutableLiveData<List<DailyForecast>>(emptyList())
-    val dailyForecastList: LiveData<List<DailyForecast>> = _dailyForecastList
+    private val _dailyForecastList = MutableLiveData<List<DailyForecastItemViewModel>>(emptyList())
+    val dailyForecastList: LiveData<List<DailyForecastItemViewModel>> = _dailyForecastList
 
     fun onPause() {
         disposable.clear()
@@ -32,11 +32,21 @@ class DailyForecastViewModel(
                 .execute(inputText.value.orEmpty())
                 .observeOn(rxScheduler.androidMainThread())
                 .subscribe({ response ->
-                    _dailyForecastList.value = response
+                    _dailyForecastList.value = response.map { toItemViewModel(it) }
                 }, { error ->
                     error.printStackTrace()
                     errorText.value = "An error is occurred. Please try again later!"
                 })
+        )
+    }
+
+    private fun toItemViewModel(dailyForecast: DailyForecast): DailyForecastItemViewModel {
+        return DailyForecastItemViewModel(
+            date = dailyForecast.date,
+            temperature = "${dailyForecast.temperature}˚C",
+            pressure = "${dailyForecast.pressure}",
+            humidity = "${dailyForecast.humidity}%",
+            weatherDescription = dailyForecast.weatherDescription,
         )
     }
 }
