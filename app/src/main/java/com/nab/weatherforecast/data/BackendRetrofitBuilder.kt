@@ -4,6 +4,7 @@ import com.nab.weatherforecast.BuildConfig
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -18,7 +19,9 @@ object BackendRetrofitBuilder {
             .connectTimeout(10, TimeUnit.SECONDS)
             .writeTimeout(10, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
-            .build()
+            .addInterceptor (HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            }).build()
 
         retrofit = Retrofit.Builder()
             .client(okHttpClient)

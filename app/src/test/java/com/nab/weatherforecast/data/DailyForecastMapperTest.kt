@@ -26,7 +26,7 @@ class DailyForecastMapperTest {
             temperature = DailyForecastTemperatureDto( 0.0),
             pressure = 0,
             humidity = 0,
-            weatherDescription = DailyForecastDescriptionDto(""),
+            weatherDescription = listOf(DailyForecastDescriptionDto("")),
         )
 
         // When
@@ -44,7 +44,7 @@ class DailyForecastMapperTest {
             temperature = DailyForecastTemperatureDto( 0.0),
             pressure = 0,
             humidity = 0,
-            weatherDescription = DailyForecastDescriptionDto(""),
+            weatherDescription = listOf(DailyForecastDescriptionDto("")),
         )
 
         // When
@@ -62,7 +62,7 @@ class DailyForecastMapperTest {
             temperature = DailyForecastTemperatureDto( 30.93),
             pressure = 0,
             humidity = 0,
-            weatherDescription = DailyForecastDescriptionDto(""),
+            weatherDescription = listOf(DailyForecastDescriptionDto("")),
         )
 
         // When
@@ -80,7 +80,7 @@ class DailyForecastMapperTest {
             temperature = DailyForecastTemperatureDto( 0.0),
             pressure = 1008,
             humidity = 0,
-            weatherDescription = DailyForecastDescriptionDto(""),
+            weatherDescription = listOf(DailyForecastDescriptionDto("")),
         )
 
         // When
@@ -98,7 +98,7 @@ class DailyForecastMapperTest {
             temperature = DailyForecastTemperatureDto( 0.0),
             pressure = 0,
             humidity = 60,
-            weatherDescription = DailyForecastDescriptionDto(""),
+            weatherDescription = listOf(DailyForecastDescriptionDto("")),
         )
 
         // When
@@ -116,7 +116,7 @@ class DailyForecastMapperTest {
             temperature = DailyForecastTemperatureDto( 0.0),
             pressure = 0,
             humidity = 0,
-            weatherDescription = DailyForecastDescriptionDto("light rain"),
+            weatherDescription = listOf(DailyForecastDescriptionDto("light rain")),
         )
 
         // When

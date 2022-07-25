@@ -19,7 +19,7 @@ data class DailyForecastDto(
     val humidity: Int,
 
     @field:Json(name = "weather")
-    val weatherDescription: DailyForecastDescriptionDto,
+    val weatherDescription: List<DailyForecastDescriptionDto>,
 ) {
     fun toDailyForecast(): DailyForecast {
         return DailyForecastMapper.map(this)
