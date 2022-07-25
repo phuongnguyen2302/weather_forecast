@@ -40,4 +40,9 @@ open class DailyForecastFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.onPause()
+    }
 }

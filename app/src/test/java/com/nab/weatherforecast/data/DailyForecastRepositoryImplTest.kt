@@ -80,14 +80,14 @@ class DailyForecastRepositoryImplTest {
             temperature = DailyForecastTemperatureDto(10.0),
             pressure = 5,
             humidity = 6,
-            weatherDescription = DailyForecastDescriptionDto("rainy")
+            weatherDescription = listOf(DailyForecastDescriptionDto("rainy"))
         )
         val secondItem = DailyForecastDto(
             date = 167,
             temperature = DailyForecastTemperatureDto(10.0),
             pressure = 9,
             humidity = 19,
-            weatherDescription = DailyForecastDescriptionDto("sunny")
+            weatherDescription = listOf(DailyForecastDescriptionDto("sunny"))
         )
         val mappedFirstItem = DailyForecast(
             date = "Tue 11 Jul 2011",

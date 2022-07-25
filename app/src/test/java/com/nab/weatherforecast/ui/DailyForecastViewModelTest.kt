@@ -15,11 +15,11 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import java.lang.Exception
 
 
 class DailyForecastViewModelTest {
-    @Rule @JvmField
+    @Rule
+    @JvmField
     var executorRule = InstantTaskExecutorRule()
 
     @MockK
@@ -99,13 +99,13 @@ class DailyForecastViewModelTest {
         sut.onGetWeatherClick()
 
         // Then
-        verify(exactly = 1) {dailyForecastListObserver.onChanged(expectedItemViewModelList)}
+        verify(exactly = 1) { dailyForecastListObserver.onChanged(expectedItemViewModelList) }
     }
 
     @Test
     fun `onGetWeatherClick - then call execute with current input text`() {
         // Given
-        sut.inputText.value = "some location"
+        sut.onTextChanged("some location", 1, 1, 1)
         every { getDailyForecastUseCase.execute(any()) } returns Single.just(emptyList())
 
         // When
@@ -113,7 +113,7 @@ class DailyForecastViewModelTest {
         sut.onGetWeatherClick()
 
         // Then
-        verify(exactly = 1) {getDailyForecastUseCase.execute("some location")}
+        verify(exactly = 1) { getDailyForecastUseCase.execute("some location") }
     }
 
     @Test

@@ -19,7 +19,7 @@ class DailyForecastDtoTest {
             temperature = DailyForecastTemperatureDto(10.0),
             pressure = 6,
             humidity = 10,
-            weatherDescription = DailyForecastDescriptionDto("rainy")
+            weatherDescription = listOf(DailyForecastDescriptionDto("rainy"))
         )
     }
 

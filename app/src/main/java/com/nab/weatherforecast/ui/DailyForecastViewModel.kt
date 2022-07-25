@@ -15,9 +15,8 @@ class DailyForecastViewModel(
 ) : ViewModel() {
 
     val disposable = CompositeDisposable()
-
-    val inputText = MutableLiveData("")
     val errorText = MutableLiveData("")
+    val inputText = MutableLiveData("")
 
     private val _dailyForecastList = MutableLiveData<List<DailyForecastItemViewModel>>(emptyList())
     val dailyForecastList: LiveData<List<DailyForecastItemViewModel>> = _dailyForecastList
@@ -38,6 +37,10 @@ class DailyForecastViewModel(
                     errorText.value = "An error is occurred. Please try again later!"
                 })
         )
+    }
+
+    fun onTextChanged(text: CharSequence, start: Int, before: Int, count: Int) {
+        inputText.value = text.toString()
     }
 
     private fun toItemViewModel(dailyForecast: DailyForecast): DailyForecastItemViewModel {
