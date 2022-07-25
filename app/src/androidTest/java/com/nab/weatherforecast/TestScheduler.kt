@@ -1,5 +1,6 @@
-package com.nab.weatherforecast.util
+package com.nab.weatherforecast
 
+import com.nab.weatherforecast.util.RxScheduler
 import io.reactivex.schedulers.Schedulers
 
 class TrampolineTestRxScheduler : RxScheduler() {

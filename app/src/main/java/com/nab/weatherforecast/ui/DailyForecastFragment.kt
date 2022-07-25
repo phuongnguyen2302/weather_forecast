@@ -12,7 +12,7 @@ open class DailyForecastFragment : Fragment() {
 
     private var _binding: FragmentDailyForecastBinding? = null
     private val binding get() = _binding!!
-    open lateinit var viewModel: DailyForecastViewModel
+    open var viewModel: DailyForecastViewModel? = null
     private lateinit var adapter: DailyForecastAdapter
 
     override fun onCreateView(
@@ -22,8 +22,10 @@ open class DailyForecastFragment : Fragment() {
         _binding = FragmentDailyForecastBinding.inflate(inflater, container, false)
 
         val application = (activity?.application as DailyForecastApplication)
-        viewModel =
-            DailyForecastViewModel(application.dailyForecastUseCase, application.rxScheduler)
+        if (viewModel == null) {
+            viewModel =
+                DailyForecastViewModel(application.dailyForecastUseCase, application.rxScheduler)
+        }
         binding.viewModel = viewModel
         adapter = DailyForecastAdapter()
 
@@ -33,7 +35,7 @@ open class DailyForecastFragment : Fragment() {
 
     private fun setupAdapter() {
         binding.dailyForecastRecyclerView.adapter = adapter
-        viewModel.dailyForecastList.observe(viewLifecycleOwner, adapter::submitList)
+        viewModel?.dailyForecastList?.observe(viewLifecycleOwner, adapter::submitList)
     }
 
     override fun onDestroyView() {
@@ -43,6 +45,6 @@ open class DailyForecastFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        viewModel.onPause()
+        viewModel?.onPause()
     }
 }
