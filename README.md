@@ -1,5 +1,9 @@
-# Development process 
-- This app was developed with Test-Driven-Development process. Tests were written before production code is implemented.  By this way, application logic can be tested throughly step by step.
+# Weather Forecast Application
+The application delivers daily forecast for the next 7 days based on input location:
+![Weather Forecast Application](./images/app.png)
+
+## Development process
+- This app was developed with Test-Driven-Development process. Tests were written before production code is implemented.
     
 ## Clean architecture with 3 layers  
 - Data (for API)  
