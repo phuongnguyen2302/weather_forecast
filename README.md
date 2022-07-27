@@ -1,6 +1,6 @@
 # Weather Forecast Application
 The application delivers daily forecast for the next 7 days based on input location:
-![Weather Forecast Application](./images/app.png)
+![Weather Forecast Application](./images/app.png =250x)
 
 ## Development process
 - This app was developed with Test-Driven-Development process. Tests were written before production code is implemented.
