@@ -17,7 +17,7 @@ import org.junit.Before
 import org.junit.Test
 
 
-class DailyForecastIntegrationTest : TestCase() {
+class DailyForecastDataIntegrationTest : TestCase() {
 
     @MockK
     private lateinit var dailyForecastRepository: DailyForecastRepository

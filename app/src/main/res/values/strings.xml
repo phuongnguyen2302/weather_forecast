@@ -15,4 +15,5 @@
     <string name="forecaste_item_pressure_tilte">Pressure:</string>
     <string name="forecaste_item_humidity_tilte">Humidity:</string>
     <string name="forecaste_item_description_tilte">Description:</string>
+    <string name="edit_text_hint_location_name">location name</string>
 </resources>

@@ -22,7 +22,8 @@
             android:onTextChanged="@{viewModel.onTextChanged}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:autofillHints="Enter location here!" />
+            android:hint="@string/edit_text_hint_location_name"
+            android:autofillHints="location" />
 
         <Button
             android:id="@+id/button_get_weather"
