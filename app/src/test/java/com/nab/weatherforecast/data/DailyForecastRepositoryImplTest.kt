@@ -1,5 +1,6 @@
 package com.nab.weatherforecast.data
 
+import android.accounts.NetworkErrorException
 import com.nab.weatherforecast.domain.DailyForecast
 import com.nab.weatherforecast.domain.DailyForecastResponse
 import com.nab.weatherforecast.util.TrampolineTestRxScheduler
@@ -69,7 +70,24 @@ class DailyForecastRepositoryImplTest {
         val result = sut.getDailyForecast("location").test()
 
         // Then
-        result.assertValue(DailyForecastResponse.Empty(successResponse.message()))
+        result.assertValue(DailyForecastResponse.Error(successResponse.message()))
+    }
+
+    @Test
+    fun `getDailyForecast - when error occurs on api call is null then returns error with exception`() {
+        // Given
+        val exception = NetworkErrorException("no connection")
+        every { api.getDailyForecast("location") } returns Single.error(exception)
+
+        // When
+        val result = sut.getDailyForecast("location").test()
+
+        // Then
+        result.assertValue(
+            DailyForecastResponse.Error(
+                exception.message ?: "Network or parsing error", exception
+            )
+        )
     }
 
     @Test

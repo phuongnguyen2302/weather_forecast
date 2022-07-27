@@ -25,14 +25,14 @@ open class DailyForecastRepositoryImpl(private val rxScheduler: RxScheduler) : D
                             )
                         }
                     } else {
-                        return@map DailyForecastResponse.Empty(response.message())
+                        return@map DailyForecastResponse.Error(response.message())
                     }
 
                     return@map DailyForecastResponse.Success(dailyForecastResults)
                 } else {
                     return@map DailyForecastResponse.Error(response.message())
                 }
-            }
+            }.onErrorReturn { DailyForecastResponse.Error(it.message?:"Network or parsing error", it) }
     }
 
 }

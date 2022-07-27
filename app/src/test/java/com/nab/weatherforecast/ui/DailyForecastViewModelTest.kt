@@ -3,13 +3,12 @@ package com.nab.weatherforecast.ui
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.nab.weatherforecast.domain.DailyForecast
+import com.nab.weatherforecast.domain.DailyForecastInputException
+import com.nab.weatherforecast.domain.DailyForecastNetworkException
 import com.nab.weatherforecast.domain.GetDailyForecastUseCase
 import com.nab.weatherforecast.util.TrampolineTestRxScheduler
-import io.mockk.MockKAnnotations
-import io.mockk.every
+import io.mockk.*
 import io.mockk.impl.annotations.MockK
-import io.mockk.spyk
-import io.mockk.verify
 import io.reactivex.Single
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -33,7 +32,7 @@ class DailyForecastViewModelTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
-        sut = DailyForecastViewModel(getDailyForecastUseCase, TrampolineTestRxScheduler())
+        sut = spyk(DailyForecastViewModel(getDailyForecastUseCase, TrampolineTestRxScheduler()))
     }
 
     @Test
@@ -107,7 +106,6 @@ class DailyForecastViewModelTest {
         // Given
         sut.onTextChanged("some location", 1, 1, 1)
         every { getDailyForecastUseCase.execute(any()) } returns Single.just(emptyList())
-
         // When
         sut.dailyForecastList.observeForever(dailyForecastListObserver)
         sut.onGetWeatherClick()
@@ -119,7 +117,7 @@ class DailyForecastViewModelTest {
     @Test
     fun `onGetWeatherClick - when error is returned then set error text`() {
         // Given
-        val exception = spyk(Exception("some exception"))
+        val exception = spyk(DailyForecastNetworkException("some exception"))
         every { getDailyForecastUseCase.execute(any()) } returns Single.error(exception)
 
         // When
@@ -128,6 +126,87 @@ class DailyForecastViewModelTest {
 
         // Then
         verify(exactly = 1) { exception.printStackTrace() }
-        assertThat(sut.errorText.value).isEqualTo("An error is occurred. Please try again later!")
+        assertThat(sut.errorText.get()).isEqualTo("An error is occurred. Please check your connection and try again!")
+    }
+
+    @Test
+    fun `onGetWeatherClick - when input error is returned then set error text`() {
+        // Given
+        val exception = spyk(DailyForecastInputException)
+        every { getDailyForecastUseCase.execute(any()) } returns Single.error(exception)
+
+        // When
+        sut.dailyForecastList.observeForever(dailyForecastListObserver)
+        sut.onGetWeatherClick()
+
+        // Then
+        verify(exactly = 1) { exception.printStackTrace() }
+        assertThat(sut.errorText.get()).isEqualTo("Location name must have 3 characters and above. Please try again!")
+    }
+
+    @Test
+    fun `onGetWeatherClick - then error text set to empty()`() {
+        // Given
+        every { getDailyForecastUseCase.execute(any()) } returns Single.just(listOf(
+            DailyForecast(
+                date = "Thu, 01 Jan 1970",
+                temperature = 10.0,
+                pressure = 6,
+                humidity = 10,
+                weatherDescription = "rainy"
+            )))
+        sut.errorText.set("location")
+
+        // When
+        sut.onGetWeatherClick()
+
+        // Then
+        assertThat(sut.errorText.get()).isEqualTo("")
+    }
+
+    @Test
+    fun `onGetWeatherClick - then list is cleared()`() {
+        // Given
+        every { getDailyForecastUseCase.execute(any()) } returns Single.error(DailyForecastNetworkException(""))
+        sut.dailyForecastList.observeForever(dailyForecastListObserver)
+
+        // When
+        sut.onGetWeatherClick()
+
+        // Then
+        verify(exactly = 2) { dailyForecastListObserver.onChanged(emptyList()) }
+    }
+
+    @Test
+    fun `onTextChanged - then error text set to empty()`() {
+        // Given
+        every { getDailyForecastUseCase.execute(any()) } returns Single.just(listOf(
+            DailyForecast(
+                date = "Thu, 01 Jan 1970",
+                temperature = 10.0,
+                pressure = 6,
+                humidity = 10,
+                weatherDescription = "rainy"
+            )))
+        sut.errorText.set("location")
+
+        // When
+        sut.onTextChanged("av", 1, 2, 3)
+
+        // Then
+        assertThat(sut.errorText.get()).isEqualTo("")
+    }
+
+    @Test
+    fun `onTextChanged - then list is cleared()`() {
+        // Given
+        every { getDailyForecastUseCase.execute(any()) } returns Single.just(mockk())
+        sut.dailyForecastList.observeForever(dailyForecastListObserver)
+
+        // When
+        sut.onTextChanged("av", 1, 2, 3)
+
+        // Then
+        verify(exactly = 2) { dailyForecastListObserver.onChanged(emptyList()) }
     }
 }

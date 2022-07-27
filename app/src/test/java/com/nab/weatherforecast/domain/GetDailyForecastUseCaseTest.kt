@@ -24,6 +24,26 @@ class GetDailyForecastUseCaseTest {
     }
 
     @Test
+    fun `execute - when input has less than 3 characters then throws InputException`() {
+        // Given
+        // When
+        val result = sut.execute("ab").test()
+
+        // Then
+        result.assertError(DailyForecastInputException::class.java)
+    }
+
+    @Test
+    fun `execute - when input has less than 3 characters then no repo call`() {
+        // Given
+        // When
+        val result = sut.execute("ab").test()
+
+        // Then
+        verify(exactly = 0) { dailyForecastRepositoryImpl.getDailyForecast(any()) }
+    }
+
+    @Test
     fun `execute - when calls execute then calls getDailyForecast via repository`() {
         // Given
         every { dailyForecastRepositoryImpl.getDailyForecast("location") } returns
@@ -47,6 +67,7 @@ class GetDailyForecastUseCaseTest {
         val result = sut.execute("location").test()
 
         // Then
+        result.assertError(DailyForecastException::class.java)
         result.assertErrorMessage(message)
     }
 
@@ -62,6 +83,7 @@ class GetDailyForecastUseCaseTest {
         val result = sut.execute("location").test()
 
         // Then
+        result.assertError(DailyForecastException::class.java)
         result.assertErrorMessage(message)
     }
 
